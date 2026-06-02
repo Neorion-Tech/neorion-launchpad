@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { translations, type Lang } from "./i18n";
 
-type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: typeof translations["fr"] };
+type Dict = (typeof translations)[Lang];
+type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: Dict };
 const LangContext = createContext<Ctx | null>(null);
 
 export function LangProvider({ children }: { children: ReactNode }) {
