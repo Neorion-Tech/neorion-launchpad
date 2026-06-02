@@ -93,6 +93,17 @@ export const translations = {
         { v: "100%", l: "Tailor-made" },
       ],
     },
+    portfolio: {
+      kicker: "Portfolio",
+      title: "Our recent work",
+      subtitle: "A selection of projects we designed, built and shipped.",
+      more: "View more",
+      visit: "Visit project",
+    },
+    tech: {
+      kicker: "Tech stack",
+      title: "Technologies we master",
+    },
     contact: {
       kicker: "Contact",
       title: "Let's talk about your project",
