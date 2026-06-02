@@ -13,7 +13,74 @@ import {
   Mail,
   Linkedin,
   Facebook,
+  ExternalLink,
 } from "lucide-react";
+
+const projects = [
+  {
+    title: "Lovasoa",
+    category: { fr: "Plateforme web", en: "Web platform" },
+    url: "https://lovasoa.mg/",
+    desc: {
+      fr: "Plateforme institutionnelle moderne, performante et responsive.",
+      en: "Modern, fast and responsive institutional platform.",
+    },
+  },
+  {
+    title: "Agroesthet",
+    category: { fr: "Site vitrine", en: "Showcase site" },
+    url: "https://agroesthet.org/",
+    desc: {
+      fr: "Site vitrine pour une organisation agricole et environnementale.",
+      en: "Showcase website for an agricultural and environmental organization.",
+    },
+  },
+  {
+    title: "Ti-Ket",
+    category: { fr: "Billetterie en ligne", en: "Online ticketing" },
+    url: "https://www.ti-ket.mg/",
+    desc: {
+      fr: "Solution de billetterie événementielle en ligne.",
+      en: "Online event ticketing solution.",
+    },
+  },
+  {
+    title: "CHU Tambohobe",
+    category: { fr: "Plateforme hospitalière", en: "Hospital platform" },
+    url: "https://chu-tambohobe.mg/",
+    desc: {
+      fr: "Site institutionnel du CHU Tambohobe.",
+      en: "Institutional website for CHU Tambohobe.",
+    },
+  },
+];
+
+const techLogos = [
+  { name: "JavaScript", slug: "javascript", color: "F7DF1E" },
+  { name: "TypeScript", slug: "typescript", color: "3178C6" },
+  { name: "Python", slug: "python", color: "3776AB" },
+  { name: "PHP", slug: "php", color: "777BB4" },
+  { name: "Java", slug: "java", color: "ED8B00" },
+  { name: "Go", slug: "go", color: "00ADD8" },
+  { name: "React", slug: "react", color: "61DAFB" },
+  { name: "Next.js", slug: "nextdotjs", color: "FFFFFF" },
+  { name: "Vue", slug: "vuedotjs", color: "4FC08D" },
+  { name: "Angular", slug: "angular", color: "DD0031" },
+  { name: "Node.js", slug: "nodedotjs", color: "5FA04E" },
+  { name: "Laravel", slug: "laravel", color: "FF2D20" },
+  { name: "Django", slug: "django", color: "092E20" },
+  { name: "Docker", slug: "docker", color: "2496ED" },
+  { name: "Kubernetes", slug: "kubernetes", color: "326CE5" },
+  { name: "Grafana", slug: "grafana", color: "F46800" },
+  { name: "Nextcloud", slug: "nextcloud", color: "0082C9" },
+  { name: "PostgreSQL", slug: "postgresql", color: "4169E1" },
+  { name: "MongoDB", slug: "mongodb", color: "47A248" },
+  { name: "Redis", slug: "redis", color: "DC382D" },
+  { name: "AWS", slug: "amazonwebservices", color: "FF9900" },
+  { name: "GitHub", slug: "github", color: "FFFFFF" },
+  { name: "GitLab", slug: "gitlab", color: "FC6D26" },
+  { name: "Figma", slug: "figma", color: "F24E1E" },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
