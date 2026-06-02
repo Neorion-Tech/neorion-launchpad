@@ -284,7 +284,7 @@ function Contact() {
               href="mailto:contact@neorion-tech.com"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-primary font-semibold hover:shadow-glow transition-all"
             >
-              <Mail className="h-4 w-4" /> contact@neorion-tech.com
+              <Mail className="h-4 w-4" /><span>contact@neorion-tech.com</span>
             </a>
             <div className="flex items-center gap-3">
               <a
