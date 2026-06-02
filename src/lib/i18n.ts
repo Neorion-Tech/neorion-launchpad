@@ -36,6 +36,17 @@ export const translations = {
         { v: "100%", l: "Sur-mesure" },
       ],
     },
+    portfolio: {
+      kicker: "Portfolio",
+      title: "Nos réalisations",
+      subtitle: "Quelques projets que nous avons conçus, développés et déployés.",
+      more: "Voir plus",
+      visit: "Voir le projet",
+    },
+    tech: {
+      kicker: "Stack technique",
+      title: "Les technologies que nous maîtrisons",
+    },
     contact: {
       kicker: "Contact",
       title: "Parlons de votre projet",
