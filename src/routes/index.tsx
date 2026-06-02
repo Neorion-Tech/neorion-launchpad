@@ -331,6 +331,95 @@ function Footer() {
   );
 }
 
+function Portfolio() {
+  const { t, lang } = useLang();
+  return (
+    <section id="portfolio" className="py-28 px-6 bg-muted/40">
+      <div className="max-w-7xl mx-auto">
+        <div className="max-w-2xl mb-16">
+          <span className="text-xs uppercase tracking-widest font-semibold text-accent">
+            {t.portfolio.kicker}
+          </span>
+          <h2 className="mt-3 text-4xl md:text-5xl font-bold text-primary">{t.portfolio.title}</h2>
+          <p className="mt-4 text-lg text-muted-foreground">{t.portfolio.subtitle}</p>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-8">
+          {projects.map((p) => {
+            const host = new URL(p.url).hostname;
+            const shot = `https://image.thum.io/get/width/1200/crop/750/noanimate/${p.url}`;
+            return (
+              <article
+                key={p.url}
+                className="group rounded-2xl overflow-hidden bg-card border border-border hover:border-accent/40 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-elegant flex flex-col"
+              >
+                <a href={p.url} target="_blank" rel="noopener noreferrer" className="relative aspect-[16/10] overflow-hidden bg-muted block">
+                  <img
+                    src={shot}
+                    alt={p.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                </a>
+                <div className="p-6 flex-1 flex flex-col">
+                  <span className="text-xs uppercase tracking-widest font-semibold text-accent">
+                    {p.category[lang]}
+                  </span>
+                  <h3 className="mt-2 text-xl font-semibold text-primary">{p.title}</h3>
+                  <p className="mt-2 text-muted-foreground leading-relaxed flex-1">{p.desc[lang]}</p>
+                  <div className="mt-5 flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">{host}</span>
+                    <a
+                      href={p.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:gap-2.5 transition-all"
+                    >
+                      {t.portfolio.more} <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TechMarquee() {
+  const { t } = useLang();
+  const loop = [...techLogos, ...techLogos];
+  return (
+    <section className="py-20 border-y border-border bg-primary text-primary-foreground overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 mb-10 text-center">
+        <span className="text-xs uppercase tracking-widest font-semibold text-[oklch(0.78_0.14_230)]">
+          {t.tech.kicker}
+        </span>
+        <h2 className="mt-3 text-3xl md:text-4xl font-bold">{t.tech.title}</h2>
+      </div>
+      <div className="relative">
+        <div className="flex gap-12 animate-marquee whitespace-nowrap">
+          {loop.map((l, i) => (
+            <div key={i} className="flex flex-col items-center gap-2 min-w-[110px] opacity-80 hover:opacity-100 transition-opacity">
+              <img
+                src={`https://cdn.simpleicons.org/${l.slug}/${l.color}`}
+                alt={l.name}
+                className="h-12 w-12"
+                loading="lazy"
+              />
+              <span className="text-xs font-medium text-white/70">{l.name}</span>
+            </div>
+          ))}
+        </div>
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-primary to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-primary to-transparent" />
+      </div>
+    </section>
+  );
+}
+
 function Page() {
   return (
     <div className="min-h-screen bg-background">
@@ -338,6 +427,8 @@ function Page() {
       <main>
         <Hero />
         <Services />
+        <Portfolio />
+        <TechMarquee />
         <About />
         <Contact />
       </main>
