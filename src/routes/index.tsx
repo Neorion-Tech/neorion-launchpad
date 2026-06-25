@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LangProvider, useLang } from "@/lib/lang-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const logoSrc = "/neorion-logo.png";
 
 import heroBg from "@/assets/hero-space.jpg";
@@ -18,8 +18,9 @@ import {
   ExternalLink,
   Menu,
   X,
-
+  Rocket,
 } from "lucide-react";
+
 
 const projects = [
   {
