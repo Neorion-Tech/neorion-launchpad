@@ -123,7 +123,7 @@ function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/70 border-b border-border/50">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="#top" className="flex items-center gap-2">
-          <img src={logoAsset.url} alt="Neorion-Tech" className="h-10 w-auto" />
+          <img src={logoSrc} alt="Neorion-Tech" className="h-10 w-auto" />
         </a>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
           <a href="#services" className="hover:text-accent transition-colors">{t.nav.services}</a>
@@ -193,7 +193,7 @@ function Hero() {
         <div className="hidden lg:flex lg:col-span-5 justify-center">
           <div className="relative">
             <div className="absolute inset-0 blur-3xl bg-accent/40 rounded-full" />
-            <img src={logoAsset.url} alt="Neorion-Tech logo" className="relative h-80 w-auto drop-shadow-2xl" />
+            <img src={logoSrc} alt="Neorion-Tech logo" className="relative h-80 w-auto drop-shadow-2xl" />
           </div>
         </div>
       </div>
@@ -261,7 +261,7 @@ function About() {
         <div className="relative aspect-square rounded-3xl overflow-hidden bg-hero shadow-elegant">
           <img src={heroBg} alt="" className="w-full h-full object-cover opacity-60" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <img src={logoAsset.url} alt="" className="h-2/3 w-auto drop-shadow-2xl" />
+            <img src={logoSrc} alt="" className="h-2/3 w-auto drop-shadow-2xl" />
           </div>
         </div>
       </div>
@@ -322,7 +322,7 @@ function Footer() {
     <footer className="border-t border-border py-10 px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <img src={logoAsset.url} alt="Neorion-Tech" className="h-9 w-auto" />
+          <img src={logoSrc} alt="Neorion-Tech" className="h-9 w-auto" />
         </div>
         <p className="text-sm text-muted-foreground">{t.footer.tagline}</p>
         <p className="text-sm text-muted-foreground">
