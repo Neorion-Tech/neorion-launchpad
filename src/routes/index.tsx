@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LangProvider, useLang } from "@/lib/lang-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const logoSrc = "/neorion-logo.png";
 
 import heroBg from "@/assets/hero-space.jpg";
@@ -18,8 +18,9 @@ import {
   ExternalLink,
   Menu,
   X,
-
+  Rocket,
 } from "lucide-react";
+
 
 const projects = [
   {
@@ -178,20 +179,63 @@ function Header() {
 }
 
 
+function Starfield({ count = 60 }: { count?: number }) {
+  // Deterministic pseudo-random so SSR matches client.
+  const stars = Array.from({ length: count }, (_, i) => {
+    const seed = (i * 9301 + 49297) % 233280;
+    const x = (seed % 100);
+    const y = ((seed * 13) % 100);
+    const d = 0.5 + ((seed * 7) % 100) / 40;
+    const delay = ((seed * 3) % 100) / 30;
+    return { x, y, d, delay };
+  });
+  return (
+    <div className="starfield" aria-hidden>
+      {stars.map((s, i) => (
+        <span
+          key={i}
+          className="star"
+          style={{ left: `${s.x}%`, top: `${s.y}%`, animationDuration: `${s.d + 2}s`, animationDelay: `${s.delay}s` }}
+        />
+      ))}
+      <span className="shooting" style={{ top: "12%", animationDelay: "1s" }} />
+      <span className="shooting" style={{ top: "42%", animationDelay: "4s" }} />
+    </div>
+  );
+}
+
 function Hero() {
   const { t } = useLang();
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const on = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { setScrollY(window.scrollY); raf = 0; });
+    };
+    window.addEventListener("scroll", on, { passive: true });
+    return () => { window.removeEventListener("scroll", on); if (raf) cancelAnimationFrame(raf); };
+  }, []);
   return (
     <section id="top" className="relative min-h-screen flex items-center overflow-hidden bg-hero text-white pt-16">
       <img
         src={heroBg}
         alt=""
-        className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen"
+        className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen parallax"
+        style={{ transform: `translate3d(0, ${scrollY * 0.35}px, 0) scale(${1 + scrollY * 0.0004})` }}
         width={1920}
         height={1080}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/30" />
+      <Starfield />
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/30 parallax"
+        style={{ transform: `translate3d(0, ${scrollY * 0.15}px, 0)` }}
+      />
       <div className="relative max-w-7xl mx-auto px-6 py-32 grid lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-7 space-y-8">
+        <div
+          className="lg:col-span-7 space-y-8 parallax"
+          style={{ transform: `translate3d(0, ${scrollY * -0.08}px, 0)` }}
+        >
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/5 backdrop-blur text-xs uppercase tracking-widest">
             <Sparkles className="h-3.5 w-3.5" /> {t.hero.kicker}
           </span>
@@ -209,34 +253,50 @@ function Hero() {
             {t.hero.subtitle}
           </p>
           <div className="flex flex-wrap gap-4 pt-2">
-            <a href="#contact" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-primary font-semibold hover:shadow-glow transition-all">
-              {t.hero.cta} <ArrowRight className="h-4 w-4" />
+            <a href="#contact" className="rocket-cta inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-primary font-semibold hover:shadow-glow">
+              <Rocket className="h-4 w-4" /> {t.hero.cta} <ArrowRight className="h-4 w-4" />
             </a>
-            <a href="#services" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/30 hover:bg-white/10 transition-colors">
+            <a href="#services" className="rocket-cta inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/30 hover:bg-white/10">
               {t.hero.ctaAlt}
             </a>
           </div>
         </div>
-        <div className="hidden lg:flex lg:col-span-5 justify-center">
+        <div
+          className="hidden lg:flex lg:col-span-5 justify-center parallax"
+          style={{ transform: `translate3d(0, ${scrollY * -0.18}px, 0)` }}
+        >
           <div className="relative">
-            <div className="absolute inset-0 blur-3xl bg-accent/40 rounded-full" />
-            <img src={logoSrc} alt="Neorion-Tech logo" className="relative h-80 w-auto drop-shadow-2xl" />
+            <div className="absolute inset-0 blur-3xl bg-accent/40 rounded-full animate-orbit-spin" />
+            <img src={logoSrc} alt="Neorion-Tech logo" className="relative h-80 w-auto drop-shadow-2xl animate-rocket-float" />
+            {/* floating rocket */}
+            <div className="absolute -top-6 -right-6 animate-rocket-float">
+              <div className="relative">
+                <Rocket className="h-12 w-12 text-white drop-shadow-[0_0_12px_oklch(0.78_0.14_230)]" />
+                <span className="absolute left-1/2 -bottom-2 -translate-x-1/2 block w-2 h-6 rounded-full bg-gradient-to-b from-[oklch(0.92_0.05_230)] via-[oklch(0.78_0.14_230)] to-transparent animate-thrust" />
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+      {/* scroll indicator */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-xs flex flex-col items-center gap-2 animate-rocket-float">
+        <Rocket className="h-4 w-4 rotate-180" />
+        <span className="uppercase tracking-widest">scroll</span>
       </div>
     </section>
   );
 }
 
+
 function Services() {
   const { t } = useLang();
   const icons = [Code2, Brain, Cloud, Network, Palette, Sparkles];
   return (
-    <section id="services" className="py-28 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-16">
-          <span className="text-xs uppercase tracking-widest font-semibold text-accent">
-            {t.services.kicker}
+    <section id="services" className="py-28 px-6 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto relative">
+        <div className="max-w-2xl mb-16 reveal">
+          <span className="text-xs uppercase tracking-widest font-semibold text-accent inline-flex items-center gap-2">
+            <Rocket className="h-3.5 w-3.5" /> {t.services.kicker}
           </span>
           <h2 className="mt-3 text-4xl md:text-5xl font-bold text-primary">{t.services.title}</h2>
           <p className="mt-4 text-lg text-muted-foreground">{t.services.subtitle}</p>
@@ -244,12 +304,13 @@ function Services() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {t.services.items.map((item, i) => {
             const Icon = icons[i];
+            const delay = `reveal-delay-${(i % 4) + 1}`;
             return (
               <div
                 key={i}
-                className="group p-8 rounded-2xl bg-card border border-border hover:border-accent/40 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-elegant"
+                className={`reveal ${delay} group p-8 rounded-2xl bg-card border border-border hover:border-accent/40 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-elegant`}
               >
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white mb-5 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white mb-5 group-hover:scale-110 group-hover:-rotate-6 transition-transform">
                   <Icon className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-semibold text-primary">{item.t}</h3>
@@ -263,12 +324,13 @@ function Services() {
   );
 }
 
+
 function About() {
   const { t } = useLang();
   return (
-    <section id="about" className="py-28 px-6 bg-muted/40">
+    <section id="about" className="py-28 px-6 bg-muted/40 relative overflow-hidden">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div>
+        <div className="reveal">
           <span className="text-xs uppercase tracking-widest font-semibold text-accent">
             {t.about.kicker}
           </span>
@@ -278,33 +340,40 @@ function About() {
           <p className="mt-6 text-lg text-muted-foreground leading-relaxed">{t.about.body}</p>
           <div className="mt-10 grid grid-cols-3 gap-6">
             {t.about.stats.map((s, i) => (
-              <div key={i}>
+              <div key={i} className={`reveal reveal-delay-${i + 1}`}>
                 <div className="text-3xl md:text-4xl font-bold text-gradient">{s.v}</div>
                 <div className="mt-1 text-sm text-muted-foreground">{s.l}</div>
               </div>
             ))}
           </div>
         </div>
-        <div className="relative aspect-square rounded-3xl overflow-hidden bg-hero shadow-elegant">
+        <div
+          className="reveal reveal-delay-2 relative aspect-square rounded-3xl overflow-hidden bg-hero shadow-elegant"
+          data-parallax="0.08"
+        >
           <img src={heroBg} alt="" className="w-full h-full object-cover opacity-60" />
+          <Starfield count={30} />
           <div className="absolute inset-0 flex items-center justify-center">
-            <img src={logoSrc} alt="" className="h-2/3 w-auto drop-shadow-2xl" />
+            <img src={logoSrc} alt="" className="h-2/3 w-auto drop-shadow-2xl animate-rocket-float" />
           </div>
+          <Rocket className="absolute top-6 right-6 h-8 w-8 text-white/80 animate-rocket-float" />
         </div>
       </div>
     </section>
   );
 }
 
+
 function Contact() {
   const { t } = useLang();
   return (
     <section id="contact" className="py-28 px-6">
-      <div className="max-w-5xl mx-auto bg-hero rounded-3xl p-12 md:p-16 text-white shadow-elegant relative overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-80 h-80 bg-accent/30 rounded-full blur-3xl" />
+      <div className="reveal max-w-5xl mx-auto bg-hero rounded-3xl p-12 md:p-16 text-white shadow-elegant relative overflow-hidden">
+        <Starfield count={40} />
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-accent/30 rounded-full blur-3xl animate-orbit-spin" />
         <div className="relative">
-          <span className="text-xs uppercase tracking-widest font-semibold text-[oklch(0.78_0.14_230)]">
-            {t.contact.kicker}
+          <span className="text-xs uppercase tracking-widest font-semibold text-[oklch(0.78_0.14_230)] inline-flex items-center gap-2">
+            <Rocket className="h-3.5 w-3.5" /> {t.contact.kicker}
           </span>
           <h2 className="mt-3 text-4xl md:text-5xl font-bold">{t.contact.title}</h2>
           <p className="mt-4 text-lg text-white/80 max-w-2xl">{t.contact.subtitle}</p>
@@ -312,7 +381,7 @@ function Contact() {
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <a
               href="mailto:contact@neorion-tech.com"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-primary font-semibold hover:shadow-glow transition-all"
+              className="rocket-cta inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-primary font-semibold hover:shadow-glow"
             >
               <Mail className="h-4 w-4" /><span>contact@neorion-tech.com</span>
             </a>
@@ -322,7 +391,7 @@ function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
+                className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
@@ -331,7 +400,7 @@ function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
+                className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all"
               >
                 <Facebook className="h-5 w-5" />
               </a>
@@ -342,6 +411,7 @@ function Contact() {
     </section>
   );
 }
+
 
 function Footer() {
   const { t } = useLang();
@@ -365,22 +435,23 @@ function Portfolio() {
   return (
     <section id="portfolio" className="py-28 px-6 bg-muted/40">
       <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-16">
-          <span className="text-xs uppercase tracking-widest font-semibold text-accent">
-            {t.portfolio.kicker}
+        <div className="max-w-2xl mb-16 reveal">
+          <span className="text-xs uppercase tracking-widest font-semibold text-accent inline-flex items-center gap-2">
+            <Rocket className="h-3.5 w-3.5" /> {t.portfolio.kicker}
           </span>
           <h2 className="mt-3 text-4xl md:text-5xl font-bold text-primary">{t.portfolio.title}</h2>
           <p className="mt-4 text-lg text-muted-foreground">{t.portfolio.subtitle}</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-8">
-          {projects.map((p) => {
+          {projects.map((p, i) => {
             const host = new URL(p.url).hostname;
             const shot = `https://image.thum.io/get/width/1200/crop/750/noanimate/${p.url}`;
             return (
               <article
                 key={p.url}
-                className="group rounded-2xl overflow-hidden bg-card border border-border hover:border-accent/40 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-elegant flex flex-col"
+                className={`reveal reveal-delay-${(i % 4) + 1} group rounded-2xl overflow-hidden bg-card border border-border hover:border-accent/40 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-elegant flex flex-col`}
               >
+
                 <a href={p.url} target="_blank" rel="noopener noreferrer" className="relative aspect-[16/10] overflow-hidden bg-muted block">
                   <img
                     src={shot}
@@ -422,12 +493,13 @@ function TechMarquee() {
   const loop = [...techLogos, ...techLogos];
   return (
     <section className="py-20 border-y border-border bg-primary text-primary-foreground overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 mb-10 text-center">
-        <span className="text-xs uppercase tracking-widest font-semibold text-[oklch(0.78_0.14_230)]">
-          {t.tech.kicker}
+      <div className="max-w-7xl mx-auto px-6 mb-10 text-center reveal">
+        <span className="text-xs uppercase tracking-widest font-semibold text-[oklch(0.78_0.14_230)] inline-flex items-center gap-2">
+          <Rocket className="h-3.5 w-3.5" /> {t.tech.kicker}
         </span>
         <h2 className="mt-3 text-3xl md:text-4xl font-bold">{t.tech.title}</h2>
       </div>
+
       <div className="relative">
         <div className="flex gap-12 animate-marquee whitespace-nowrap">
           {loop.map((l, i) => (
@@ -450,6 +522,48 @@ function TechMarquee() {
 }
 
 function Page() {
+  useEffect(() => {
+    // Reveal-on-scroll observer
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("in-view");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    // Lightweight parallax for [data-parallax] elements
+    const parallaxEls = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-parallax]"),
+    );
+    let raf = 0;
+    const apply = () => {
+      const sy = window.scrollY;
+      for (const el of parallaxEls) {
+        const speed = parseFloat(el.dataset.parallax || "0.1");
+        const rect = el.getBoundingClientRect();
+        const offset = (rect.top + sy - window.innerHeight / 2) * -speed;
+        el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+      }
+      raf = 0;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply); };
+    apply();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -465,3 +579,4 @@ function Page() {
     </div>
   );
 }
+

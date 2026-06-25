@@ -112,3 +112,84 @@
   animation: marquee 40s linear infinite;
   width: max-content;
 }
+
+/* ===== Rocket / parallax / reveal ===== */
+@keyframes rocket-float {
+  0%, 100% { transform: translateY(0) rotate(-12deg); }
+  50%      { transform: translateY(-18px) rotate(-8deg); }
+}
+@keyframes thrust {
+  0%, 100% { transform: scaleY(1) scaleX(1); opacity: 0.85; }
+  50%      { transform: scaleY(1.7) scaleX(0.6); opacity: 1; }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; }
+  50%      { opacity: 0.95; }
+}
+@keyframes shooting-star {
+  0%   { transform: translate(-10vw, 0) rotate(20deg); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translate(120vw, 60vh) rotate(20deg); opacity: 0; }
+}
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1);
+  will-change: opacity, transform;
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+
+.parallax { will-change: transform; }
+
+@utility animate-rocket-float { animation: rocket-float 4s ease-in-out infinite; }
+@utility animate-thrust { animation: thrust 0.35s ease-in-out infinite; transform-origin: top center; }
+@utility animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
+@utility animate-orbit-spin { animation: orbit-spin 22s linear infinite; }
+
+/* Rocket boost button: light streak on hover */
+.rocket-cta { position: relative; overflow: hidden; isolation: isolate; transition: transform .3s ease, box-shadow .3s ease; }
+.rocket-cta::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, oklch(0.92 0.05 230 / 0.55), transparent);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.rocket-cta:hover::before { transform: translateX(120%); }
+.rocket-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -10px oklch(0.62 0.16 240 / 0.55); }
+
+/* Starfield */
+.starfield { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.starfield .star {
+  position: absolute; width: 2px; height: 2px;
+  background: white; border-radius: 9999px;
+  box-shadow: 0 0 6px white;
+  animation: twinkle 3s ease-in-out infinite;
+}
+.starfield .shooting {
+  position: absolute; width: 160px; height: 2px;
+  background: linear-gradient(90deg, transparent, white, transparent);
+  filter: drop-shadow(0 0 6px white);
+  animation: shooting-star 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .parallax,
+  .animate-rocket-float, .animate-thrust, .animate-twinkle, .animate-orbit-spin,
+  .starfield .star, .starfield .shooting {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
