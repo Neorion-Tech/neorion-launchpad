@@ -328,9 +328,9 @@ function Services() {
 function About() {
   const { t } = useLang();
   return (
-    <section id="about" className="py-28 px-6 bg-muted/40">
+    <section id="about" className="py-28 px-6 bg-muted/40 relative overflow-hidden">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div>
+        <div className="reveal">
           <span className="text-xs uppercase tracking-widest font-semibold text-accent">
             {t.about.kicker}
           </span>
@@ -340,23 +340,29 @@ function About() {
           <p className="mt-6 text-lg text-muted-foreground leading-relaxed">{t.about.body}</p>
           <div className="mt-10 grid grid-cols-3 gap-6">
             {t.about.stats.map((s, i) => (
-              <div key={i}>
+              <div key={i} className={`reveal reveal-delay-${i + 1}`}>
                 <div className="text-3xl md:text-4xl font-bold text-gradient">{s.v}</div>
                 <div className="mt-1 text-sm text-muted-foreground">{s.l}</div>
               </div>
             ))}
           </div>
         </div>
-        <div className="relative aspect-square rounded-3xl overflow-hidden bg-hero shadow-elegant">
+        <div
+          className="reveal reveal-delay-2 relative aspect-square rounded-3xl overflow-hidden bg-hero shadow-elegant"
+          data-parallax="0.08"
+        >
           <img src={heroBg} alt="" className="w-full h-full object-cover opacity-60" />
+          <Starfield count={30} />
           <div className="absolute inset-0 flex items-center justify-center">
-            <img src={logoSrc} alt="" className="h-2/3 w-auto drop-shadow-2xl" />
+            <img src={logoSrc} alt="" className="h-2/3 w-auto drop-shadow-2xl animate-rocket-float" />
           </div>
+          <Rocket className="absolute top-6 right-6 h-8 w-8 text-white/80 animate-rocket-float" />
         </div>
       </div>
     </section>
   );
 }
+
 
 function Contact() {
   const { t } = useLang();
