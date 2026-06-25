@@ -292,11 +292,11 @@ function Services() {
   const { t } = useLang();
   const icons = [Code2, Brain, Cloud, Network, Palette, Sparkles];
   return (
-    <section id="services" className="py-28 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-16">
-          <span className="text-xs uppercase tracking-widest font-semibold text-accent">
-            {t.services.kicker}
+    <section id="services" className="py-28 px-6 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto relative">
+        <div className="max-w-2xl mb-16 reveal">
+          <span className="text-xs uppercase tracking-widest font-semibold text-accent inline-flex items-center gap-2">
+            <Rocket className="h-3.5 w-3.5" /> {t.services.kicker}
           </span>
           <h2 className="mt-3 text-4xl md:text-5xl font-bold text-primary">{t.services.title}</h2>
           <p className="mt-4 text-lg text-muted-foreground">{t.services.subtitle}</p>
@@ -304,12 +304,13 @@ function Services() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {t.services.items.map((item, i) => {
             const Icon = icons[i];
+            const delay = `reveal-delay-${(i % 4) + 1}`;
             return (
               <div
                 key={i}
-                className="group p-8 rounded-2xl bg-card border border-border hover:border-accent/40 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-elegant"
+                className={`reveal ${delay} group p-8 rounded-2xl bg-card border border-border hover:border-accent/40 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-elegant`}
               >
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white mb-5 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white mb-5 group-hover:scale-110 group-hover:-rotate-6 transition-transform">
                   <Icon className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-semibold text-primary">{item.t}</h3>
@@ -322,6 +323,7 @@ function Services() {
     </section>
   );
 }
+
 
 function About() {
   const { t } = useLang();
