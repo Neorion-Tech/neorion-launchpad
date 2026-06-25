@@ -522,6 +522,48 @@ function TechMarquee() {
 }
 
 function Page() {
+  useEffect(() => {
+    // Reveal-on-scroll observer
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("in-view");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    // Lightweight parallax for [data-parallax] elements
+    const parallaxEls = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-parallax]"),
+    );
+    let raf = 0;
+    const apply = () => {
+      const sy = window.scrollY;
+      for (const el of parallaxEls) {
+        const speed = parseFloat(el.dataset.parallax || "0.1");
+        const rect = el.getBoundingClientRect();
+        const offset = (rect.top + sy - window.innerHeight / 2) * -speed;
+        el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+      }
+      raf = 0;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply); };
+    apply();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -537,3 +579,4 @@ function Page() {
     </div>
   );
 }
+
