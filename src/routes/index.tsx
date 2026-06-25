@@ -368,11 +368,12 @@ function Contact() {
   const { t } = useLang();
   return (
     <section id="contact" className="py-28 px-6">
-      <div className="max-w-5xl mx-auto bg-hero rounded-3xl p-12 md:p-16 text-white shadow-elegant relative overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-80 h-80 bg-accent/30 rounded-full blur-3xl" />
+      <div className="reveal max-w-5xl mx-auto bg-hero rounded-3xl p-12 md:p-16 text-white shadow-elegant relative overflow-hidden">
+        <Starfield count={40} />
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-accent/30 rounded-full blur-3xl animate-orbit-spin" />
         <div className="relative">
-          <span className="text-xs uppercase tracking-widest font-semibold text-[oklch(0.78_0.14_230)]">
-            {t.contact.kicker}
+          <span className="text-xs uppercase tracking-widest font-semibold text-[oklch(0.78_0.14_230)] inline-flex items-center gap-2">
+            <Rocket className="h-3.5 w-3.5" /> {t.contact.kicker}
           </span>
           <h2 className="mt-3 text-4xl md:text-5xl font-bold">{t.contact.title}</h2>
           <p className="mt-4 text-lg text-white/80 max-w-2xl">{t.contact.subtitle}</p>
@@ -380,7 +381,7 @@ function Contact() {
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <a
               href="mailto:contact@neorion-tech.com"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-primary font-semibold hover:shadow-glow transition-all"
+              className="rocket-cta inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-primary font-semibold hover:shadow-glow"
             >
               <Mail className="h-4 w-4" /><span>contact@neorion-tech.com</span>
             </a>
@@ -390,7 +391,7 @@ function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
+                className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
@@ -399,7 +400,7 @@ function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
+                className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 hover:-translate-y-1 transition-all"
               >
                 <Facebook className="h-5 w-5" />
               </a>
@@ -410,6 +411,7 @@ function Contact() {
     </section>
   );
 }
+
 
 function Footer() {
   const { t } = useLang();
