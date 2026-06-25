@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LangProvider, useLang } from "@/lib/lang-context";
-import logoAsset from "@/assets/neorion-logo.png.asset.json";
+import { useState } from "react";
+const logoSrc = "/neorion-logo.png";
+
 import heroBg from "@/assets/hero-space.jpg";
 import {
   Code2,
