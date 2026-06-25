@@ -179,20 +179,63 @@ function Header() {
 }
 
 
+function Starfield({ count = 60 }: { count?: number }) {
+  // Deterministic pseudo-random so SSR matches client.
+  const stars = Array.from({ length: count }, (_, i) => {
+    const seed = (i * 9301 + 49297) % 233280;
+    const x = (seed % 100);
+    const y = ((seed * 13) % 100);
+    const d = 0.5 + ((seed * 7) % 100) / 40;
+    const delay = ((seed * 3) % 100) / 30;
+    return { x, y, d, delay };
+  });
+  return (
+    <div className="starfield" aria-hidden>
+      {stars.map((s, i) => (
+        <span
+          key={i}
+          className="star"
+          style={{ left: `${s.x}%`, top: `${s.y}%`, animationDuration: `${s.d + 2}s`, animationDelay: `${s.delay}s` }}
+        />
+      ))}
+      <span className="shooting" style={{ top: "12%", animationDelay: "1s" }} />
+      <span className="shooting" style={{ top: "42%", animationDelay: "4s" }} />
+    </div>
+  );
+}
+
 function Hero() {
   const { t } = useLang();
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const on = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { setScrollY(window.scrollY); raf = 0; });
+    };
+    window.addEventListener("scroll", on, { passive: true });
+    return () => { window.removeEventListener("scroll", on); if (raf) cancelAnimationFrame(raf); };
+  }, []);
   return (
     <section id="top" className="relative min-h-screen flex items-center overflow-hidden bg-hero text-white pt-16">
       <img
         src={heroBg}
         alt=""
-        className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen"
+        className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen parallax"
+        style={{ transform: `translate3d(0, ${scrollY * 0.35}px, 0) scale(${1 + scrollY * 0.0004})` }}
         width={1920}
         height={1080}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/30" />
+      <Starfield />
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/30 parallax"
+        style={{ transform: `translate3d(0, ${scrollY * 0.15}px, 0)` }}
+      />
       <div className="relative max-w-7xl mx-auto px-6 py-32 grid lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-7 space-y-8">
+        <div
+          className="lg:col-span-7 space-y-8 parallax"
+          style={{ transform: `translate3d(0, ${scrollY * -0.08}px, 0)` }}
+        >
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/5 backdrop-blur text-xs uppercase tracking-widest">
             <Sparkles className="h-3.5 w-3.5" /> {t.hero.kicker}
           </span>
@@ -210,24 +253,40 @@ function Hero() {
             {t.hero.subtitle}
           </p>
           <div className="flex flex-wrap gap-4 pt-2">
-            <a href="#contact" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-primary font-semibold hover:shadow-glow transition-all">
-              {t.hero.cta} <ArrowRight className="h-4 w-4" />
+            <a href="#contact" className="rocket-cta inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-primary font-semibold hover:shadow-glow">
+              <Rocket className="h-4 w-4" /> {t.hero.cta} <ArrowRight className="h-4 w-4" />
             </a>
-            <a href="#services" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/30 hover:bg-white/10 transition-colors">
+            <a href="#services" className="rocket-cta inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/30 hover:bg-white/10">
               {t.hero.ctaAlt}
             </a>
           </div>
         </div>
-        <div className="hidden lg:flex lg:col-span-5 justify-center">
+        <div
+          className="hidden lg:flex lg:col-span-5 justify-center parallax"
+          style={{ transform: `translate3d(0, ${scrollY * -0.18}px, 0)` }}
+        >
           <div className="relative">
-            <div className="absolute inset-0 blur-3xl bg-accent/40 rounded-full" />
-            <img src={logoSrc} alt="Neorion-Tech logo" className="relative h-80 w-auto drop-shadow-2xl" />
+            <div className="absolute inset-0 blur-3xl bg-accent/40 rounded-full animate-orbit-spin" />
+            <img src={logoSrc} alt="Neorion-Tech logo" className="relative h-80 w-auto drop-shadow-2xl animate-rocket-float" />
+            {/* floating rocket */}
+            <div className="absolute -top-6 -right-6 animate-rocket-float">
+              <div className="relative">
+                <Rocket className="h-12 w-12 text-white drop-shadow-[0_0_12px_oklch(0.78_0.14_230)]" />
+                <span className="absolute left-1/2 -bottom-2 -translate-x-1/2 block w-2 h-6 rounded-full bg-gradient-to-b from-[oklch(0.92_0.05_230)] via-[oklch(0.78_0.14_230)] to-transparent animate-thrust" />
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+      {/* scroll indicator */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-xs flex flex-col items-center gap-2 animate-rocket-float">
+        <Rocket className="h-4 w-4 rotate-180" />
+        <span className="uppercase tracking-widest">scroll</span>
       </div>
     </section>
   );
 }
+
 
 function Services() {
   const { t } = useLang();
