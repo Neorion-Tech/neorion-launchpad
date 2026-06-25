@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LangProvider, useLang } from "@/lib/lang-context";
-import logoAsset from "@/assets/neorion-logo.png.asset.json";
+import { useState } from "react";
+const logoSrc = "/neorion-logo.png";
+
 import heroBg from "@/assets/hero-space.jpg";
 import {
   Code2,
@@ -14,6 +16,9 @@ import {
   Linkedin,
   Facebook,
   ExternalLink,
+  Menu,
+  X,
+
 } from "lucide-react";
 
 const projects = [
@@ -117,17 +122,24 @@ export const Route = createFileRoute("/")({
 
 function Header() {
   const { lang, setLang, t } = useLang();
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+  const navLinks = (
+    <>
+      <a href="#services" onClick={close} className="hover:text-accent transition-colors">{t.nav.services}</a>
+      <a href="#portfolio" onClick={close} className="hover:text-accent transition-colors">{t.portfolio.kicker}</a>
+      <a href="#about" onClick={close} className="hover:text-accent transition-colors">{t.nav.about}</a>
+      <a href="#contact" onClick={close} className="hover:text-accent transition-colors">{t.nav.contact}</a>
+    </>
+  );
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/70 border-b border-border/50">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="#top" className="flex items-center gap-2">
-          <img src={logoAsset.url} alt="Neorion-Tech" className="h-10 w-auto" />
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/50">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <a href="#top" className="flex items-center gap-2" onClick={close}>
+          <img src={logoSrc} alt="Neorion-Tech" className="h-14 md:h-16 w-auto" />
         </a>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-          <a href="#services" className="hover:text-accent transition-colors">{t.nav.services}</a>
-          <a href="#portfolio" className="hover:text-accent transition-colors">{t.portfolio.kicker}</a>
-          <a href="#about" className="hover:text-accent transition-colors">{t.nav.about}</a>
-          <a href="#contact" className="hover:text-accent transition-colors">{t.nav.contact}</a>
+          {navLinks}
         </nav>
         <div className="flex items-center gap-3">
           <div className="flex items-center text-xs font-semibold rounded-full border border-border overflow-hidden">
@@ -143,11 +155,28 @@ function Header() {
           <a href="#contact" className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full bg-accent text-accent-foreground hover:opacity-90 transition-opacity">
             {t.nav.contact} <ArrowRight className="h-4 w-4" />
           </a>
+          <button
+            type="button"
+            aria-label="Menu"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+            className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-border hover:bg-muted transition-colors"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
+      {open && (
+        <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-md">
+          <nav className="flex flex-col px-6 py-4 gap-4 text-base font-medium">
+            {navLinks}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
+
 
 function Hero() {
   const { t } = useLang();
@@ -191,7 +220,7 @@ function Hero() {
         <div className="hidden lg:flex lg:col-span-5 justify-center">
           <div className="relative">
             <div className="absolute inset-0 blur-3xl bg-accent/40 rounded-full" />
-            <img src={logoAsset.url} alt="Neorion-Tech logo" className="relative h-80 w-auto drop-shadow-2xl" />
+            <img src={logoSrc} alt="Neorion-Tech logo" className="relative h-80 w-auto drop-shadow-2xl" />
           </div>
         </div>
       </div>
@@ -259,7 +288,7 @@ function About() {
         <div className="relative aspect-square rounded-3xl overflow-hidden bg-hero shadow-elegant">
           <img src={heroBg} alt="" className="w-full h-full object-cover opacity-60" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <img src={logoAsset.url} alt="" className="h-2/3 w-auto drop-shadow-2xl" />
+            <img src={logoSrc} alt="" className="h-2/3 w-auto drop-shadow-2xl" />
           </div>
         </div>
       </div>
@@ -320,7 +349,7 @@ function Footer() {
     <footer className="border-t border-border py-10 px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <img src={logoAsset.url} alt="Neorion-Tech" className="h-9 w-auto" />
+          <img src={logoSrc} alt="Neorion-Tech" className="h-9 w-auto" />
         </div>
         <p className="text-sm text-muted-foreground">{t.footer.tagline}</p>
         <p className="text-sm text-muted-foreground">
