@@ -493,12 +493,13 @@ function TechMarquee() {
   const loop = [...techLogos, ...techLogos];
   return (
     <section className="py-20 border-y border-border bg-primary text-primary-foreground overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 mb-10 text-center">
-        <span className="text-xs uppercase tracking-widest font-semibold text-[oklch(0.78_0.14_230)]">
-          {t.tech.kicker}
+      <div className="max-w-7xl mx-auto px-6 mb-10 text-center reveal">
+        <span className="text-xs uppercase tracking-widest font-semibold text-[oklch(0.78_0.14_230)] inline-flex items-center gap-2">
+          <Rocket className="h-3.5 w-3.5" /> {t.tech.kicker}
         </span>
         <h2 className="mt-3 text-3xl md:text-4xl font-bold">{t.tech.title}</h2>
       </div>
+
       <div className="relative">
         <div className="flex gap-12 animate-marquee whitespace-nowrap">
           {loop.map((l, i) => (
