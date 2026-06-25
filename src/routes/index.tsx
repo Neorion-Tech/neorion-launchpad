@@ -16,6 +16,9 @@ import {
   Linkedin,
   Facebook,
   ExternalLink,
+  Menu,
+  X,
+
 } from "lucide-react";
 
 const projects = [
